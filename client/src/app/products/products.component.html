@@ -1,0 +1,16 @@
+<div class="inner-page" *ngIf="products$ | async as products">
+  <h1>{{ products.description }}</h1>
+  <div class="product">
+    <mat-card *ngFor="let articles of products['articles']">
+      <mat-card-content>
+          <img src="/assets/{{ articles.articleCode }}.jpg" />
+          <div class="product-content">
+            <h3>{{ articles.description }}</h3>
+            <div>As low as ${{ articles.price.amount }} each</div>
+            <button mat-raised-button  (click)="onAddCart(articles)">Add Cart</button>
+          </div>
+        </mat-card-content
+      >
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+:host {
+  .product {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(35rem, 1fr));
+    column-gap: 3rem;
+    row-gap: 5rem;
+    grid-auto-columns: minmax(35rem, 1fr);
+    justify-items: center;
+    margin-top: 4rem;
+    mat-card {
+      img {
+        width: 75%;
+      }
+      text-align: center;
+    }
+
+    .product-content {
+      h3 {
+        margin-bottom: 1rem;
+      }
+      display: grid;
+      row-gap: 2rem;
+      button {
+        background-color: var(--primaryBGColor);
+        color: var(--primaryColor);
+      }
+    }
+  }
+}

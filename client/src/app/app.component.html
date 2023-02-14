@@ -1,0 +1,27 @@
+<header>
+  <div class="logo">
+    <a routerLink="/"> <img src="assets/logo.png" alt="photo butler" /></a>
+  </div>
+  <div class="menu">
+    <ul>
+      <li><a routerLink="/products">Product</a></li>
+      <li><a routerLink="/invoice">Invoice</a></li>
+      <li>
+        <a routerLink="/cart">
+          <div class="cartmenu">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="shopping_bag"
+              fontIcon="shopping_bag"
+            ></mat-icon>
+            <span>{{ cartCount }}</span>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</header>
+<section class="content">
+  <router-outlet></router-outlet>
+</section>
+<footer><div>©2023 Photo Butler</div></footer>

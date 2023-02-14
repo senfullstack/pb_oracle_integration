@@ -1,0 +1,43 @@
+:host {
+    .hero {
+        position: relative;
+        height: 100%;
+       
+        img {
+          object-position: 50% 50%;
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+        }
+        .overlay {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          opacity: 0.21;
+          background-color: var(--backgroundOverlayColor);
+        }
+        .alt {
+          position: absolute;
+          display: grid;
+          align-items: center;
+          justify-items: center;
+          height: 100%;
+          align-items: center;
+          grid-template-columns: 1fr;
+          width: 100%;
+        }
+        h1 {
+          font-size: 64px;
+          font-weight: 500;
+          color: white;
+          display: flex;
+          width: 50%;
+          margin: 0;
+          text-align: center;
+          white-space: pre-wrap;
+          line-height: 7rem;
+        }
+      }
+}

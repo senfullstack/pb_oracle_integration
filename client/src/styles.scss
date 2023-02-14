@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500&display=swap");
+:root {
+  --navigationLinkColor: rgb(15, 15, 15);
+  --siteBackgroundColor: rgb(10,10,10);
+  --primaryBGColor: rgb(14,159,215);
+  --primaryColor: #fff;
+}
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: var(--navigationLinkColor);
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  font-size: 1.2rem;
+}
+a {
+  color: var(--navigationLinkColor);
+  text-decoration: none;
+}
+
+ul {
+  margin: 0;
+  list-style: none;
+  padding: 0;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

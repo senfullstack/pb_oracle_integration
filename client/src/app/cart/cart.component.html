@@ -1,0 +1,87 @@
+<div class="inner-page">
+  <h1>Checkout</h1>
+  <ng-container *ngIf="cartCount; else cartempty">
+    <div class="cart-container">
+      <div class="cart-products">
+        <h2>Product(s)</h2>
+
+        <div
+          class="products"
+          *ngFor="let cart of carts$ | async; let index = index"
+        >
+          <div>{{ index + 1 }}</div>
+          <div><img src="/assets/{{ cart.articleCode }}.jpg" /></div>
+          <div>{{ cart.description }}</div>
+          <div>Qty: 1</div>
+          <div>Price: ${{ cart.price.amount }}</div>
+        </div>
+      </div>
+      <div class="customer">
+        <div class="customer-header">
+          <h2>Customer</h2>
+          <div class="choose-customer">
+            <h5>Choose Guest</h5>
+            <mat-form-field appearance="fill">
+              <mat-label>Guest</mat-label>
+              <mat-select [(value)]="selectedCustomer">
+                <mat-option
+                  *ngFor="let customer of customer"
+                  [value]="customer"
+                >
+                  {{ customer.givenName }}, {{ customer.surname }} - Room #
+                  {{ customer.roomId }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="customer-info" *ngIf="selectedCustomer">
+          <div class="customer-detail">
+            <span>Given Name :</span>
+            <span>{{ selectedCustomer.givenName }}</span>
+          </div>
+
+          <div class="customer-detail">
+            <span>Surname :</span>
+            <span>{{ selectedCustomer.surname }}</span>
+          </div>
+
+          <div class="customer-detail">
+            <span>Room # :</span>
+            <span>{{ selectedCustomer.roomId }}</span>
+          </div>
+
+          <div class="customer-detail">
+            <span>Reservation # :</span>
+            <span>{{ selectedCustomer.reservationId }}</span>
+          </div>
+          <div class="customer-detail">
+            <span>Confomation # :</span>
+            <span>{{ selectedCustomer.confomationId }}</span>
+          </div>
+
+          <div class="customer-detail">
+            <span>Start Date :</span>
+            <span>{{ selectedCustomer.arrival }}</span>
+          </div>
+
+          <div class="customer-detail">
+            <span>End Date :</span>
+            <span>{{ selectedCustomer.depature }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <div class="checkout">
+    <button mat-raised-button [disabled]="!selectedCustomer" (click)="checkOut()">Checkout</button>
+  </div>
+ 
+</div>
+
+<ng-template #cartempty>
+  <div class="cartempty"><p>Your cart is empty</p></div>
+</ng-template>
+
+<!-- get Guests Transactions (v1) -->
