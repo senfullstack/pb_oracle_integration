@@ -5,6 +5,15 @@ const { getOAuth } = require("./opera");
 const { default: axios } = require("axios");
 const app = express();
 
+const winston = require('winston');
+
+let logger = winston.createLogger({
+  transports: [
+    new (winston.transports.File)({ filename: 'app.log', level: 'info', timestamp: true })
+  ],
+  exitOnError: false, // do not exit on handled exceptions
+});
+
 app.use(cors());
 app.use(bodyParser.json());
 const BaseUrl =
@@ -20,13 +29,13 @@ const operaAxios = axios.create({
 });
 
 operaAxios.interceptors.request.use(req => {
-  console.log(`${JSON.stringify(req, null, 2)}`);
+  logger.info(`${JSON.stringify(req, null, 2)}`);
   // you must return the request object after you are done
   return req;
 });
 
 operaAxios.interceptors.response.use(res => {
-  console.log(res.data);
+  logger.info(res.data);
   // you must return the response object after you are done
   return res;
 });
