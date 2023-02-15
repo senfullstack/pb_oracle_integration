@@ -1,6 +1,46 @@
 <div class="inner-page">
   <h1>Checkout</h1>
+
   <ng-container *ngIf="cartCount; else cartempty">
+    <form class="search-container">
+      <h3>Search Guest</h3>
+      <mat-form-field appearance="fill">
+        <mat-label>Room No</mat-label>
+        <input
+          matInput
+          type="number"
+          [formControl]="roomNoController"
+          placeholder="Ex. 201"
+        />
+
+        <mat-error *ngIf="roomNoController.hasError('required')">
+          Room No is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>SurName</mat-label>
+        <input
+          matInput
+          [formControl]="surNameController"
+          placeholder="Ex. Smith"
+        />
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="roomNoController.invalid"
+        (click)="onGuestSearch()"
+      >
+        Search
+      </button>
+    </form>
+
+    <p class="no-record-found" *ngIf="!guest?.reservationId">
+      No In House Guest Found
+    </p>
+
     <div class="cart-container">
       <div class="cart-products">
         <h2>Product(s)</h2>
@@ -16,72 +56,65 @@
           <div>Price: ${{ cart.price.amount }}</div>
         </div>
       </div>
-      <div class="customer">
+      <div class="customer" *ngIf="guestFound">
         <div class="customer-header">
-          <h2>Customer</h2>
-          <div class="choose-customer">
-            <h5>Choose Guest</h5>
-            <mat-form-field appearance="fill">
-              <mat-label>Guest</mat-label>
-              <mat-select [(value)]="selectedCustomer">
-                <mat-option
-                  *ngFor="let customer of customer"
-                  [value]="customer"
-                >
-                  {{ customer.givenName }}, {{ customer.surname }} - Room #
-                  {{ customer.roomId }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
+          <h2>Guest</h2>
         </div>
 
-        <div class="customer-info" *ngIf="selectedCustomer">
+        <div class="customer-info">
           <div class="customer-detail">
             <span>Given Name :</span>
-            <span>{{ selectedCustomer.givenName }}</span>
+            <span>{{ guest.givenName }}</span>
           </div>
 
           <div class="customer-detail">
             <span>Surname :</span>
-            <span>{{ selectedCustomer.surname }}</span>
+            <span>{{ guest.surname }}</span>
           </div>
 
           <div class="customer-detail">
             <span>Room # :</span>
-            <span>{{ selectedCustomer.roomId }}</span>
+            <span>{{ guest.roomId }}</span>
           </div>
 
           <div class="customer-detail">
             <span>Reservation # :</span>
-            <span>{{ selectedCustomer.reservationId }}</span>
+            <span>{{ guest.reservationId }}</span>
           </div>
           <div class="customer-detail">
             <span>Confomation # :</span>
-            <span>{{ selectedCustomer.confomationId }}</span>
+            <span>{{ guest.confomationId }}</span>
           </div>
 
           <div class="customer-detail">
             <span>Start Date :</span>
-            <span>{{ selectedCustomer.arrival }}</span>
+            <span>{{ guest.arrivalDate }}</span>
           </div>
 
           <div class="customer-detail">
             <span>End Date :</span>
-            <span>{{ selectedCustomer.depature }}</span>
+            <span>{{ guest.departureDate }}</span>
+          </div>
+
+          <div class="customer-detail">
+            <span>Address :</span>
+            <span>{{ guest.address }}</span>
           </div>
         </div>
       </div>
     </div>
   </ng-container>
   <div class="checkout">
-    <button mat-raised-button [disabled]="!selectedCustomer" (click)="checkOut()">Checkout</button>
+    <button mat-raised-button [disabled]="!guestFound" (click)="checkOut()">
+      Checkout
+    </button>
   </div>
- 
 </div>
 
 <ng-template #cartempty>
   <div class="cartempty"><p>Your cart is empty</p></div>
 </ng-template>
 
-<!-- get Guests Transactions (v1) -->
+<div class="spinner" *ngIf="isProgress">
+  <mat-spinner></mat-spinner>
+</div>

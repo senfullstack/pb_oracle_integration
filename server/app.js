@@ -11,7 +11,7 @@ let logger = winston.createLogger({
   transports: [
     new (winston.transports.File)({ filename: 'app.log', level: 'info', timestamp: true })
   ],
-  exitOnError: false, // do not exit on handled exceptions
+  exitOnError: false,
 });
 
 app.use(cors());
@@ -30,13 +30,13 @@ const operaAxios = axios.create({
 
 operaAxios.interceptors.request.use(req => {
   logger.info(`${JSON.stringify(req, null, 2)}`);
-  // you must return the request object after you are done
+  console.log(`${JSON.stringify(req, null, 2)}`);
   return req;
 });
 
 operaAxios.interceptors.response.use(res => {
   logger.info(res.data);
-  // you must return the response object after you are done
+  console.log(res.data);
   return res;
 });
 

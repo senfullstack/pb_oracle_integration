@@ -30,9 +30,6 @@
   .content {
     // border: 1px solid #cdcdcd;
     background-color: #f9f9fb;
-   
-    
-    
   }
   footer {
     display: grid;
@@ -43,7 +40,6 @@
   ::ng-deep {
     .inner-page {
       padding: 4rem;
-      
     }
   }
 
@@ -53,6 +49,34 @@
     grid-template-columns: 1fr 1fr;
     mat-icon {
       color: var(--primaryBGColor);
+    }
+  }
+
+  ::ng-deep {
+    .spinner {
+      position: absolute;
+      display: grid;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      align-items: center;
+      justify-items: center;
+    }
+
+    .search-container {
+      margin: 2rem 0 3rem 2rem;
+      display: grid;
+      column-gap: 3rem;
+      grid-auto-flow: column;
+      grid-auto-columns: max-content;
+      align-items: center;
+    }
+
+    .no-record-found {
+      text-align: center;
+      margin: 10rem auto;
+      font-weight: 500;
     }
   }
 }

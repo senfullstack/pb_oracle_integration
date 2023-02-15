@@ -33,3 +33,14 @@ export type Customer = {
   depature: string;
 };
 
+export type Guest = {
+  roomId?: string;
+  arrivalDate?: string;
+  departureDate?: string;
+  givenName?: string;
+  address?: string;
+  surname?: string;
+  confomationId?: string;
+  reservationId?: string;
+}
+

@@ -10,6 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { MaterialPackage } from './material/material.module';
 import { HttpClientModule } from '@angular/common/http';
 import { InvoiceComponent } from './invoice/invoice.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,8 @@ import { InvoiceComponent } from './invoice/invoice.component';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     MaterialPackage,
     HttpClientModule,
   ],

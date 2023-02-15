@@ -1,9 +1,11 @@
+import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Article, Customer } from './../app.model';
-import { Observable, Subscription } from 'rxjs';
+import { Article, Customer, Guest } from './../app.model';
+import { Observable, Subscription, mergeMap, of, tap } from 'rxjs';
 import { AppService } from './../app-service.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DefaultCustomer } from '../app.constant';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-cart',
@@ -15,8 +17,13 @@ export class CartComponent implements OnInit, OnDestroy {
   cartCount: number;
   sub$: Subscription;
   carts$: Observable<Article[]>;
-  selectedCustomer: Customer;
-  constructor(private appservice: AppService, private router: Router) {}
+
+  roomNoController = new FormControl("", [Validators.required]);
+  surNameController = new FormControl("");
+  isProgress = false;
+  guest: Guest ={}
+  guestFound: boolean = false
+  constructor(private appservice: AppService, private router: Router, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.sub$ = this.appservice.cart$.subscribe(
@@ -28,9 +35,32 @@ export class CartComponent implements OnInit, OnDestroy {
     this.sub$.unsubscribe();
   }
   checkOut() {
-    this.appservice.checkout(this.selectedCustomer.reservationId).subscribe(res => {
+    this.appservice.checkout(this.guest.reservationId as string).subscribe(res => {
       this.appservice.emptyCart();
-      this.router.navigate(['/invoice']);
+      this.snackBar.open(`Successfully Charged to ${this.guest.givenName}`, ' ' , {duration: 5000});
+      this.guestFound = false;
+      this.guest = {}
     })
   }
+
+  onGuestSearch() {
+    this.isProgress = true;
+    this.guestFound = false;
+    const guest: Guest = {
+      roomId: this.roomNoController.value as string,
+      surname: this.surNameController.value as string,
+    };
+    this.appservice
+      .searchGuest(guest).subscribe(guest => {
+        this.guest = guest;
+        console.log(guest.reservationId)
+        if(guest.reservationId) {
+          this.guestFound = true;
+        }
+        this.isProgress = false;
+       
+      })
+  }
+
+
 }

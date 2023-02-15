@@ -1,9 +1,8 @@
 import { Observable } from 'rxjs';
 import { AppService } from './../app-service.service';
 import { Component, OnInit } from '@angular/core';
-import { DefaultProducts } from './products.constant';
-import { Article, Products, TrxCode } from '../app.model';
-
+import { Article, TrxCode } from '../app.model';
+import {MatSnackBar} from '@angular/material/snack-bar';
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
@@ -11,7 +10,7 @@ import { Article, Products, TrxCode } from '../app.model';
 })
 export class ProductsComponent implements OnInit {
   products$: Observable<TrxCode>;
-  constructor(private appService: AppService) {}
+  constructor(private appService: AppService, private snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.products$ = this.appService.getProducts();
@@ -19,5 +18,6 @@ export class ProductsComponent implements OnInit {
 
   onAddCart(articles: Article) {
     this.appService.updateCart(articles);
+    this.snackBar.open(articles.description, 'Added to cart!' , {duration: 5000});
   }
 }

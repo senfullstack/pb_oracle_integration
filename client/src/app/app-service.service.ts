@@ -1,13 +1,13 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Article, TrxCode } from './app.model';
-import { Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Article, Guest, TrxCode } from "./app.model";
+import { Injectable, OnInit } from "@angular/core";
+import { BehaviorSubject, Observable, map } from "rxjs";
 
-import { environment } from './../environments/environment';
-import { HotelId, URI, cashierId, transactionCodes } from './app.constant';
+import { environment } from "./../environments/environment";
+import { HotelId, URI, cashierId, transactionCodes } from "./app.constant";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class AppService implements OnInit {
   private cart: BehaviorSubject<Article[]> = new BehaviorSubject<Article[]>([]);
@@ -36,7 +36,7 @@ export class AppService implements OnInit {
   generateOAuth() {
     this.http.post(`${this.apiUrl}/${URI.token}`, {}).subscribe((res: any) => {
       const headers = new HttpHeaders({
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${res.token}`,
       });
       this.authHeaders.next(headers);
@@ -61,12 +61,12 @@ export class AppService implements OnInit {
             articleCode: cart.articleCode,
             price: {
               amount: cart.price.amount,
-              currencyCode: 'USD',
+              currencyCode: "USD",
             },
             postingQuantity: 1,
             postingReference: cart.description,
             postingRemark: cart.description,
-            checkNumber: '',
+            checkNumber: "",
             applyRoutingInstructions: false,
             usePackageAllowance: false,
             autoPosting: true,
@@ -78,29 +78,64 @@ export class AppService implements OnInit {
           id: reservationId,
           idExtension: 0,
         },
-        incomeAuditDate: '2021-10-05',
+        incomeAuditDate: "2021-10-05",
         postIt: false,
         cashierId: cashierId,
         welcomeOfferPosting: true,
       },
     };
 
+    return this.http.post(
+      `${this.apiUrl}/csh/v0/hotels/${HotelId}/reservations/${reservationId}/charges`,
+      resBody,
+      {
+        headers: this.authHeaders.value,
+      }
+    );
+  }
+
+  searchGuest(guest: Guest): Observable<Guest> {
     return this.http
-      .post(
-        `${this.apiUrl}/csh/v0/hotels/${HotelId}/reservations/${reservationId}/charges`,
-        resBody,
+      .get<any>(
+        `${this.apiUrl}/rsv/v1/hotels/${HotelId}/reservations?roomId=${guest.roomId}&searchType=InHouse&surname=${guest.surname}`,
         {
           headers: this.authHeaders.value,
         }
       )
+      .pipe(
+        map((res) => {
+          if (res.data?.reservations?.reservationInfo?.[0]) {
+            const reservation = res.data?.reservations?.reservationInfo?.[0];
+            guest = {
+              ...guest,
+              arrivalDate: reservation.roomStay.arrivalDate,
+              departureDate: reservation.roomStay.departureDate,
+              givenName: reservation.reservationGuest.givenName,
+              address: `${reservation.reservationGuest.address.cityName}, ${reservation.reservationGuest.address?.state}, ${reservation.reservationGuest.address?.postalCode}, ${reservation.reservationGuest.address?.country?.code}`,
+              surname: reservation.reservationGuest.surname,
+              reservationId: reservation.reservationIdList?.[0]?.id,
+              confomationId: reservation.reservationIdList?.[1]?.id,
+            };
+          }
+          return guest;
+        })
+      );
   }
 
   getInvoice(reservationId: string) {
-
     return this.http
-    .get<any>(`${this.apiUrl}/csh/v1/hotels/${HotelId}/transactions?reservationList=${reservationId}&idContext=OPERA&type=Reservation&cashierId=${cashierId}`, {
-      headers: this.authHeaders.value,
-    })
-    .pipe(map((res) => res.data.reservationFolioInformation[0].folioWindows[0].folios[0].postings));
+      .get<any>(
+        `${this.apiUrl}/csh/v1/hotels/${HotelId}/transactions?reservationList=${reservationId}&idContext=OPERA&type=Reservation&cashierId=${cashierId}`,
+        {
+          headers: this.authHeaders.value,
+        }
+      )
+      .pipe(
+        map(
+          (res) =>
+            res.data.reservationFolioInformation?.[0].folioWindows?.[0]
+              .folios?.[0].postings ?? []
+        )
+      );
   }
 }

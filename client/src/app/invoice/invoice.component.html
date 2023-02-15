@@ -1,92 +1,136 @@
 <div class="inner-page">
   <h1>Invoice</h1>
 
-  <div class="choose-customer">
-    <h5>Choose Guest</h5>
+  <form class="search-container">
+    <h3>Search Guest</h3>
     <mat-form-field appearance="fill">
-      <mat-label>Guest</mat-label>
-      <mat-select (valueChange)="onSelectCustomer($event)">
-        <mat-option *ngFor="let customer of customer" [value]="customer">
-          {{ customer.givenName }}, {{ customer.surname }} - Room #
-          {{ customer.roomId }}
-        </mat-option>
-      </mat-select>
+      <mat-label>Room No</mat-label>
+      <input
+        matInput
+        type="number"
+        [formControl]="roomNoController"
+        placeholder="Ex. 201"
+      />
+
+      <mat-error *ngIf="roomNoController.hasError('required')">
+        Room No is <strong>required</strong>
+      </mat-error>
     </mat-form-field>
-  </div>
 
-  <div class="invoice-content" *ngIf="dataSource.length">
-    <div class="invoice-folio">
-      <h2>Folio</h2>
+    <mat-form-field appearance="fill">
+      <mat-label>SurName</mat-label>
+      <input
+        matInput
+        [formControl]="surNameController"
+        placeholder="Ex. Smith"
+      />
+    </mat-form-field>
 
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="roomNoController.invalid"
+      (click)="onGuestSearch()"
+    >
+      Search
+    </button>
+  </form>
 
-        <!-- Name Column -->
-        <ng-container matColumnDef="transactionNo">
-          <th mat-header-cell *matHeaderCellDef>Transaction No</th>
-          <td mat-cell *matCellDef="let element">{{ element.transactionNo }}</td>
-        </ng-container>
+  <ng-container *ngIf="!isProgress; else spinner">
+    <p class="no-record-found" *ngIf="!guest?.reservationId">
+      No In House Guest Found
+    </p>
 
-        <!-- Weight Column -->
-        <ng-container matColumnDef="postingDate">
-          <th mat-header-cell *matHeaderCellDef>Posting Date</th>
-          <td mat-cell *matCellDef="let element">{{ element.postingDate }}</td>
-        </ng-container>
+    <div class="invoice-content" *ngIf="dataSource.length">
+      <div class="invoice-folio">
+        <h2>Folio</h2>
 
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="transactionAmount">
-          <th mat-header-cell *matHeaderCellDef>Transaction Amount</th>
-          <td mat-cell *matCellDef="let element">${{ element.transactionAmount }}</td>
-        </ng-container>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+          <!--- Note that these columns can be defined in any order.
+                The actual rendered columns are set as a property on the row definition" -->
 
-        <ng-container matColumnDef="reference">
+          <!-- Name Column -->
+          <ng-container matColumnDef="transactionNo">
+            <th mat-header-cell *matHeaderCellDef>Transaction No</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.transactionNo }}
+            </td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="postingDate">
+            <th mat-header-cell *matHeaderCellDef>Posting Date</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.postingDate }}
+            </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="transactionAmount">
+            <th mat-header-cell *matHeaderCellDef>Transaction Amount</th>
+            <td mat-cell *matCellDef="let element">
+              ${{ element.transactionAmount }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="reference">
             <th mat-header-cell *matHeaderCellDef>Reference</th>
             <td mat-cell *matCellDef="let element">{{ element.reference }}</td>
           </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
-    </div>
-    <div class="invoice-customer">
-      <h2>Customer</h2>
-      <div class="customer-info" *ngIf="selectedCustomer">
-        <div class="customer-detail">
-          <span>Given Name :</span>
-          <span>{{ selectedCustomer.givenName }}</span>
-        </div>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+      <div class="invoice-customer">
+        <h2>Customer</h2>
+        <div class="customer-info" >
+          <div class="customer-detail">
+            <span>Given Name :</span>
+            <span>{{ guest.givenName }}</span>
+          </div>
+  
+          <div class="customer-detail">
+            <span>Surname :</span>
+            <span>{{ guest.surname }}</span>
+          </div>
+  
+          <div class="customer-detail">
+            <span>Room # :</span>
+            <span>{{ guest.roomId }}</span>
+          </div>
+  
+          <div class="customer-detail">
+            <span>Reservation # :</span>
+            <span>{{ guest.reservationId }}</span>
+          </div>
+          <div class="customer-detail">
+            <span>Confomation # :</span>
+            <span>{{ guest.confomationId }}</span>
+          </div>
+  
+          <div class="customer-detail">
+            <span>Start Date :</span>
+            <span>{{ guest.arrivalDate }}</span>
+          </div>
+  
+          <div class="customer-detail">
+            <span>End Date :</span>
+            <span>{{ guest.departureDate }}</span>
+          </div>
 
-        <div class="customer-detail">
-          <span>Surname :</span>
-          <span>{{ selectedCustomer.surname }}</span>
+          <div class="customer-detail">
+            <span>Address :</span>
+            <span>{{ guest.address }}</span>
+          </div>
         </div>
-
-        <div class="customer-detail">
-          <span>Room # :</span>
-          <span>{{ selectedCustomer.roomId }}</span>
-        </div>
-
-        <div class="customer-detail">
-          <span>Reservation # :</span>
-          <span>{{ selectedCustomer.reservationId }}</span>
-        </div>
-        <div class="customer-detail">
-          <span>Confomation # :</span>
-          <span>{{ selectedCustomer.confomationId }}</span>
-        </div>
-
-        <div class="customer-detail">
-          <span>Start Date :</span>
-          <span>{{ selectedCustomer.arrival }}</span>
-        </div>
-
-        <div class="customer-detail">
-          <span>End Date :</span>
-          <span>{{ selectedCustomer.depature }}</span>
-        </div>
-        
       </div>
     </div>
-  </div>
+  </ng-container>
 </div>
+
+<ng-template #spinner>
+  <div class="spinner" *ngIf="isProgress">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>
