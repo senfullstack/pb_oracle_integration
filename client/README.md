@@ -2,6 +2,8 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.5.
 
+Run `npm i` first time for install the dependency packages.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
@@ -12,6 +14,8 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 ==========================================================================================================
 # Server Project`
 ## Development server
+
+Run `npm i` first time for install the dependency packages.
 
 Run `npm dev` for a dev server. Navigate to `http://localhost:3200/`. The application will automatically reload if you change any of the source files.
 
