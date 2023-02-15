@@ -1,4 +1,4 @@
-# PbOracleAddFolio
+# Client Project`
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.5.
 
@@ -6,22 +6,34 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. (Please upload the dist/*.* in your server)
+==========================================================================================================
+# Server Project`
+## Development server
 
-## Running unit tests
+Run `npm dev` for a dev server. Navigate to `http://localhost:3200/`. The application will automatically reload if you change any of the source files.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+=============================================================================================================
 
-## Running end-to-end tests
+## API 
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+1) Get Token - Receive oAuth Token
+    URL : http://localhost:3002/getToken
+    Method : POST
+    Payload : {}
 
-## Further help
+2) Reterive Products (created transaction#2100 and associated few articles(product))
+    URL : http://localhost:3002/csh/v0/hotels/SAND01/transactionCodes?includeArticles=true&code=2100
+    Method : GET
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+3) Search By Room ID and or Surname
+    URL : http://localhost:3002/rsv/v1/hotels/SAND01/reservations?roomId=201&searchType=InHouse&surname=Benaim
+    Mehtod : GET
+
+4) Checkout / Add Charge
+    URL : http://localhost:3002/csh/v0/hotels/SAND01/reservations/140978/charges
+    Method: POST
+    Payload: {"criteria":{"hotelId":"SAND01","charges":[{"transactionCode":"2100","articleCode":"2103","price":{"amount":5,"currencyCode":"USD"},"postingQuantity":1,"postingReference":"3 copy print","postingRemark":"3 copy print","checkNumber":"","applyRoutingInstructions":false,"usePackageAllowance":false,"autoPosting":true,"folioWindowNo":2,"cashierId":777}],"reservationId":{"id":"140978","idExtension":0},"incomeAuditDate":"2021-10-05","postIt":false,"cashierId":777,"welcomeOfferPosting":true}}
+
